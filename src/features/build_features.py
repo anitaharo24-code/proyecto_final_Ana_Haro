@@ -54,13 +54,13 @@ def preprocess_pipeline(df: pd.DataFrame) -> pd.DataFrame:
 if __name__ == "__main__":
     print("Módulo de feature engineering... ")
     
-    df_train = pd.read_csv("../data/interim/train_set.csv")
+    df_train = pd.read_csv("./data/interim/train_set.csv")
     print(f"Dataset cargado: {df_train.shape}")
 
     df_procesado = preprocess_pipeline(df_train)
 
-    os.makedirs("../data/processed", exist_ok=True)
-    df_procesado.to_csv("../data/processed/train_processed.csv", index=False)
+    os.makedirs("./data/processed", exist_ok=True)
+    df_procesado.to_csv("./data/processed/train_processed.csv", index=False)
 
     print("Pipeline completado")
     print(f"Shape: {df_procesado.shape}")
