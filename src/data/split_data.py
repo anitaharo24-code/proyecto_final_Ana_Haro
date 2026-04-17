@@ -31,22 +31,32 @@ def split_and_save_data(raw_data_path: str, interim_data_path: str):
         labels=[1, 2, 3, 4, 5]
     )
     
-    # 3. Split estratificado
+    # 3. Split estratificado Train+Val / Test (80/20)
     split = StratifiedShuffleSplit(n_splits=1, test_size=0.2, random_state=42)
-    for train_idx, test_idx in split.split(df, df["income_cat"]):
-        train_set = df.loc[train_idx].copy()
+    for train_val_idx, test_idx in split.split(df, df["income_cat"]):
+        train_val = df.loc[train_val_idx].copy()
         test_set  = df.loc[test_idx].copy()
     
-    # 4. Eliminar columna auxiliar
+    # 4. Split Train / Val (80/20 del train_val)
+    # Proporciones finales: 64% train, 16% val, 20% test
+    train_set, val_set = train_test_split(
+        train_val,
+        test_size=0.2,
+        random_state=42
+    )
+    
+    # 5. Eliminar columna auxiliar de los 3 conjuntos
     train_set = train_set.drop(columns=["income_cat"])
+    val_set   = val_set.drop(columns=["income_cat"])
     test_set  = test_set.drop(columns=["income_cat"])
     
-    # 5. Guardar archivos
+    # 6. Guardar los 3 archivos
     Path(interim_data_path).mkdir(parents=True, exist_ok=True)
     train_set.to_csv(Path(interim_data_path) / "train_set.csv", index=False)
+    val_set.to_csv(Path(interim_data_path) / "val_set.csv", index=False)
     test_set.to_csv(Path(interim_data_path) / "test_set.csv", index=False)
     
-    print(f"Train: {train_set.shape} | Test: {test_set.shape}")
+    print(f"Train: {train_set.shape} | Val: {val_set.shape} | Test: {test_set.shape}")
     print(f"Archivos guardados en '{interim_data_path}'")
 
 if __name__ == "__main__":
