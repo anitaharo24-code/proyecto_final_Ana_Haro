@@ -16,3 +16,11 @@ __pycache__/
 
 # Mac OS
 .DS_Store
+
+# Modelos entrenados (son muy pesados)
+models/*.pkl
+
+# Datos
+data/raw/
+data/interim/
+data/processed/
