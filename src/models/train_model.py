@@ -79,8 +79,8 @@ def evaluate_model(model_path: str, processed_test_data_path: str):
 
 if __name__ == "__main__":
     PROCESSED_TRAIN_PATH = "data/processed/train_processed.csv"
-    PROCESSED_TEST_PATH = "data/processed/test_processed.csv"
+    #PROCESSED_TEST_PATH = "data/processed/test_processed.csv"
     MODEL_OUTPUT_PATH = "models/best_model.pkl"
     train_best_model(PROCESSED_TRAIN_PATH, MODEL_OUTPUT_PATH)
-    evaluate_model(MODEL_OUTPUT_PATH, PROCESSED_TEST_PATH)
+    #evaluate_model(MODEL_OUTPUT_PATH, PROCESSED_TEST_PATH)
     print("Script de entrenamiento finalizado.")
