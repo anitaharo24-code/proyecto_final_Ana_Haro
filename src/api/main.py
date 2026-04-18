@@ -62,6 +62,22 @@ def predict_price(features: HousingFeatures):
     data = pd.DataFrame([features.model_dump()])
 
     #Codificación de ocean_proximity que es string
+    # Mapeo de OrdinalEncoder:  <1H OCEAN: 0,   INLAND: 1,  ISLAND: 2,  NEAR BAY: 3,  NEAR OCEAN: 4
+    ocean_mapping = {
+        "<1H OCEAN": 0,
+        "INLAND": 1,
+        "ISLAND": 2,
+        "NEAR BAY": 3,
+        "NEAR OCEAN": 4
+    }
+
+    # Codificar la variable categórica
+    data["ocean_proximity"] = data["ocean_proximity"].map(ocean_mapping)
+
+    # Crear features nuevas (igual que build_features.py)
+    data["rooms_per_household"]      = data["total_rooms"] / data["households"]
+    data["population_per_household"] = data["population"] / data["households"]
+    data["bedrooms_per_room"]        = data["total_bedrooms"] / data["total_rooms"]
 
     #2. Usar model.predict() para generar la predicción
 
