@@ -60,6 +60,7 @@ def evaluate_model(model_path: str, processed_test_data_path: str):
     """
     # 1. Cargar el modelo guardado
     modelo_cargado = joblib.load(model_path)
+    scaler = joblib.load(model_path.replace(".pkl", "_scaler.pkl"))
 
     # 2. Cargar los datos de prueba preprocesados
     df_test = pd.read_csv(processed_test_data_path)

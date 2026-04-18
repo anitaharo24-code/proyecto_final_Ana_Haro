@@ -21,21 +21,23 @@ class HousingFeatures(BaseModel):
     households: float
     median_income: float
     # Añade cualquier variable categórica o enriquecida que el modelo requiera
-    # ej: ocean_proximity: str 
+    ocean_proximity: str 
     # ej: rooms_per_household: float
 
 # Variable global para cargar el modelo
 # IMPORTANTE: Asegúrate de guardar tu modelo en "models/best_model.pkl" o ajusta la ruta
 model = None
+scaler = None
 
 @app.on_event("startup")
 def load_model():
     """
     Carga el modelo globalmente al iniciar el servidor usando joblib.
     """
-    global model
+    global model,scaler
     try:
         model = joblib.load("models/best_model.pkl")
+        scaler = joblib.load("models/best_model_scaler.pkl")
     except Exception as e:
         print("Advertencia: No se pudo cargar el modelo. ¿Ya lo entrenaste y guardaste?")
 
@@ -56,7 +58,18 @@ def predict_price(features: HousingFeatures):
         return {"error": "El modelo no se ha cargado."}
     
     # Tu código aquí para predecir
-    prediction = 0.0 # Reemplazar con model.predict()
+    # 1. Convertir datos de entrada a DataFrame
+    data = pd.DataFrame([features.model_dump()])
+
+    #Codificación de ocean_proximity que es string
+
+    #2. Usar model.predict() para generar la predicción
+
+    numerical_features = data.select_dtypes(include="number").columns
+    data[numerical_features] = scaler.transform(data[numerical_features])
+    prediction = model.predict(data)[0]
+
+    # 3. Retornar la predicción
     
     return {"predicted_price": prediction}
 
